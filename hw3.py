@@ -89,8 +89,12 @@ def get_pseudo_labels(dataset,model,threshold=0.65):
         #TODO filter the data and construct a new dataset
         # max_prob=probs.argmax(dim=-1)
         max_prob=probs.topk(k=1,largest=True,dim=1)
-        max_prob>threshold
-        mask=torch.ones()
+        # max_prob>threshold
+        # 返回probs矩阵里，大于0.09的数的index
+        # (probs>0.09).nonzero()
+        # max_prob是所有行，每行最大的数的定义，然后他们values大于阈值，.nonzero得到的是index矩阵，
+        # 最后得到行index,说明这一行对应的img大于阈值
+        (max_prob.values > 0.0945).nonzero()[:, 0]
         print(1)
 
     # turn off the eval mode
