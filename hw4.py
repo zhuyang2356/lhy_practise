@@ -10,6 +10,7 @@ from torch.optim import AdamW
 from lrSched import get_cosine_schedule_with_warmup
 import tqdm
 
+
 class Classifier(nn.Module):
     def __init__(self,d_model=80,n_spks=600,dropout=0.1):
         super().__init__()
@@ -70,7 +71,7 @@ if __name__=="__main__":
 
     best_accuracy=-1.0
     best_state_dict=None
-    pbar=tqdm(total=valid_steps,ncols=0,desc="Train",unit="step")
+    # pbar=tqdm(total=valid_steps,ncols=0,desc="Train",unit="step")
 
     for step in range(total_steps):
         try:
@@ -82,7 +83,25 @@ if __name__=="__main__":
         mels,labels=batch
         mels=mels.to(device)
         labels=labels.to(device)
-        outs=model
+        outs=model(mels)
+        loss=criterion(outs,labels)
+        # get the speakerId with hight prob
+        preds=outs.argmax(1)
+        accuracy=torch.mean((preds==labels).float())
+#
+        batch_loss=loss.item()
+        batch_accuracy=accuracy.item()
+
+#         update model
+        loss.backward()
+        optimizer.step()
+        scheduler.step()
+        optimizer.zero_grad()
+
+        print("step loss")
+
+
+
 
 
 
