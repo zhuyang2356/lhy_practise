@@ -21,7 +21,6 @@ class myDataset(Dataset):
         for speaker in metadata.keys():
             for utterances in metadata[speaker]:
                 self.data.append([utterances["feature_path"],self.speaker2id[speaker]])
-
     def __len__(self):
         return len(self.data)
     def __getitem__(self, index):
